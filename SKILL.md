@@ -112,9 +112,12 @@ Flat, monochrome, dense — professional desktop software, circa a lab instrumen
 
 ## 5. Engineering
 
-- **One self-contained file.** A single `.py` for PyQt (with a PyQt6→PyQt5
-  compat shim); a single self-contained `.html` (inline CSS + JS, no CDN, no
-  build chain) for web. No dependencies beyond PyQt.
+- **One self-contained file — an `.html`.** Inline CSS + JS, no CDN, no build
+  chain, opens by double-click. That is the deliverable.
+- **Do not build a PyQt twin unless he asks.** For the Logic Studio he had me
+  build `LogicGatesStudio.py` as *scaffolding* -- a desktop app to settle the
+  look before the HTML existed -- and once the HTML was right he dropped it as
+  purposeless. The look lives in this skill now; go straight to HTML.
 - **Generate, don't retype.** Build every table from the underlying data in
   code. If you also ship an HTML twin, generate the HTML *from the same data
   functions* so the two can never disagree.
@@ -145,9 +148,11 @@ Flat, monochrome, dense — professional desktop software, circa a lab instrumen
 
 ## 7. Deliverable conventions
 
-- PyQt app: one `.py` he can `python3 app.py` with no arguments.
 - HTML: one `.html` that opens by double-click; the same page must work at
-  phone width.
+  phone width. This is the deliverable.
+- If a PyQt build is ever explicitly wanted, one `.py` he can `python3 app.py`
+  with no arguments -- but treat it as scaffolding for the look, not the
+  artifact.
 - Name files plainly (`studio.html`, `LogicGatesStudio.py`); re-save the same
   name for a new version rather than inventing `_v2`.
 - When the work is for a repo, push it and give him the commit link; when a page
