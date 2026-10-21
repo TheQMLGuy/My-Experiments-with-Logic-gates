@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logic</title>
+<style>
+:root{--ink:#1f1f1f;--muted:#6b6b6b;--line:#dcdcdc;--grid:#d6d6d6;
+--hl:#e0a53a;--row:#f7e2b8;--band:#f0f0f0;--head:#efefef;--paper:#ffffff}
+*{box-sizing:border-box}
+body{margin:0;background:#f4f4f4;color:var(--ink);
+font:13px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+.topbar{display:flex;align-items:center;gap:22px;padding:7px 14px;
+background:#fbfbfb;border-bottom:1px solid var(--line)}
+.brand{font-weight:700;letter-spacing:.2px}
+.sub{color:var(--muted);font-size:12px}
+.tabs{display:flex;background:#fbfbfb;border-bottom:1px solid var(--line)}
+.tab,.subtab{flex:1;padding:7px 10px;background:none;border:0;border-bottom:2px solid transparent;
+font:inherit;color:var(--muted);cursor:pointer}
+.tab.active,.subtab.active{color:var(--ink);border-bottom-color:var(--ink);font-weight:600}
+.subtabs{display:flex;background:#fbfbfb;border-bottom:1px solid var(--line);margin-bottom:8px}
+.wrap{padding:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:2px;margin-bottom:10px}
+.card>h2{margin:0;padding:4px 10px;font-size:12px;font-weight:600;color:var(--muted);
+border-bottom:1px solid var(--line);background:#fcfcfc}
+.card .body{padding:8px}
+table.grid{width:100%;border-collapse:collapse;font-family:"DejaVu Sans Mono",ui-monospace,monospace;
+font-size:11.5px;table-layout:auto}
+table.grid th{background:var(--head);border:1px solid var(--grid);padding:2px 5px;
+font-weight:600;white-space:nowrap;cursor:pointer;user-select:none}
+table.grid td{border:1px solid var(--grid);padding:1px 5px;text-align:center;white-space:nowrap}
+table.grid td:nth-child(7),table.grid td:nth-child(8),
+table.grid td:nth-child(9),table.grid td:nth-child(10),
+table.grid td:nth-child(11){text-align:center}
+.neg{background:#000;color:#fff;padding:0 2px}
+.pos{background:#fff;padding:0 2px}
+tr.hot td{background:var(--row)!important}
+tr.band td{background:var(--band)}
+.hidden{display:none}
+.covwrap{display:flex;gap:14px;align-items:flex-start}
+.covers{width:auto}.covers td,.covers th{min-width:30px}
+.legend{margin-top:6px;color:var(--muted);font-family:"DejaVu Sans Mono",monospace;font-size:10.5px}
+.vbar{display:flex;gap:5px;align-items:center;margin-bottom:8px;font-family:"DejaVu Sans Mono",monospace}
+.vb{border:1px solid var(--line);background:#fff;padding:2px 9px;cursor:pointer;font:inherit}
+.vb.negb{background:#000;color:#fff;border-color:#000}
+.vb.on{background:var(--hl);color:#000;border-color:var(--hl)}
+.panels{display:flex;gap:10px;align-items:stretch}
+.panel{flex:1;background:#fff;border:1px solid var(--line)}
+.panel>h3{margin:0;padding:4px 8px;font-size:11px;color:var(--muted);border-bottom:1px solid var(--line)}
+.diag{width:100%;height:260px;display:block}
+.vc{fill:none;stroke:#3a4a5a;stroke-width:1.4}
+.vc.hl{fill:rgba(224,165,58,.35)}
+.vl{fill:#3a4a5a;font-size:13px;text-anchor:middle}
+.ce{stroke:#8a7a30;stroke-width:1.6}
+.cv1{fill:#2e7d4f}.cv0{fill:#a4453a}.cvt{fill:#fff;font-size:11px;text-anchor:middle}
+.cbl{fill:#6b6b6b;font-size:9px;text-anchor:middle}
+.tn{fill:#e8e8e8;stroke:#8a8a8a}
+.fl{font-size:11px;text-anchor:middle}
+.fl .neg{background:#000;color:#fff}
+.conbox{display:flex;gap:26px;flex-wrap:wrap}
+.conbox label{display:block;margin:2px 0}
+.verdict{margin-top:8px;font-size:12px}
+</style></head>
+<body>
+<div class="topbar"><span class="brand">Logic</span>
+<span class="sub">two variables, base 2</span></div>
+<div class="tabs" id="tabs">
+<button class="tab active" data-t="rep">Representation</button>
+<button class="tab" data-t="tables">Tables</button>
+<button class="tab" data-t="props">Properties</button>
+</div>
+
+<div class="page wrap" id="p-rep">
+<div class="vbar"><span>variable:</span><button class="vb" data-lit="0">a</button><button class="vb negb" data-lit="1">a</button><button class="vb" data-lit="2">b</button><button class="vb negb" data-lit="3">b</button></div>
+<div class="panels">
+<div class="panel"><h3>Venn</h3><svg viewBox="0 0 300 220" class="diag">
+<circle cx="118" cy="110" r="72" class="vc"/><circle cx="182" cy="110" r="72" class="vc"/>
+<text x="62" y="112" class="vl">A</text><text x="238" y="112" class="vl">B</text></svg></div>
+<div class="panel"><h3>cube (hypercube)</h3><svg viewBox="0 0 260 220" class="diag"><line x1="60" y1="160" x2="60" y2="60" class="ce"/><line x1="60" y1="160" x2="200" y2="160" class="ce"/><line x1="60" y1="60" x2="200" y2="60" class="ce"/><line x1="200" y1="160" x2="200" y2="60" class="ce"/><text x="130" y="42" class="fl">b</text><text x="130" y="196" class="fl"><tspan class="neg">b</tspan></text><text x="36" y="112" class="fl"><tspan class="neg">a</tspan></text><text x="224" y="112" class="fl">a</text><circle cx="60" cy="160" r="15" class="cv0"/><text x="60" y="164" class="cvt">0</text><text x="60" y="138" class="cbl">00</text><circle cx="60" cy="60" r="15" class="cv1"/><text x="60" y="64" class="cvt">1</text><text x="60" y="38" class="cbl">01</text><circle cx="200" cy="160" r="15" class="cv0"/><text x="200" y="164" class="cvt">0</text><text x="200" y="138" class="cbl">10</text><circle cx="200" cy="60" r="15" class="cv1"/><text x="200" y="64" class="cvt">1</text><text x="200" y="38" class="cbl">11</text></svg>
+<div class="facts">n = 2&nbsp;&nbsp;2^2 = 4 vertices&nbsp;&nbsp;4 edges&nbsp;&nbsp;degree 2</div></div>
+<div class="panel"><h3>tree (lattice)</h3><svg viewBox="0 0 260 210" class="diag"><line x1="130" y1="40" x2="70" y2="105" class="ce"/><line x1="130" y1="40" x2="190" y2="105" class="ce"/><line x1="70" y1="105" x2="130" y2="172" class="ce"/><line x1="190" y1="105" x2="130" y2="172" class="ce"/><circle cx="130" cy="40" r="4" class="tn"/><text x="130" y="30" class="cbl">11</text><circle cx="70" cy="105" r="4" class="tn"/><text x="70" y="95" class="cbl">01</text><circle cx="190" cy="105" r="4" class="tn"/><text x="190" y="95" class="cbl">10</text><circle cx="130" cy="172" r="4" class="tn"/><text x="130" y="162" class="cbl">00</text></svg></div>
+</div>
+</div>
+
+<div class="page wrap hidden" id="p-tables">
+<div class="subtabs" id="subtabs">
+<button class="subtab active" data-s="reps">representations</button>
+<button class="subtab" data-s="matrix">matrix</button>
+<button class="subtab" data-s="uni">universal</button>
+</div>
+<div id="s-reps"><div class="card"><h2>the 16 functions&nbsp;&nbsp;(two variables)</h2>
+<div class="body"><table class="grid "><thead><tr><th>#</th><th>matrix</th><th>det</th><th>trace</th><th>eigen</th><th>rank</th><th>code</th><th>SOP</th><th>ANF</th><th>Walsh</th><th>set</th><th>NPN</th></tr></thead><tbody><tr><td>0</td><td>[[0, 0], [0, 0]]</td><td>0</td><td>0</td><td>0, 0</td><td>0</td><td>0000</td><td>0</td><td>0</td><td>+4 +0 +0 +0</td><td>∅</td><td>constant</td></tr><tr><td>1</td><td>[[0, 1], [0, 0]]</td><td>0</td><td>0</td><td>0, 0</td><td>1</td><td>0001</td><td>AB</td><td>ab</td><td>+2 +2 +2 -2</td><td>A ∩ B</td><td>AND / NAND</td></tr><tr><td>2</td><td>[[0, 0], [0, 1]]</td><td>0</td><td>1</td><td>1, 0</td><td>1</td><td>0010</td><td><span class="pos">A</span><span class="neg">B</span></td><td>a ⊕ ab</td><td>+2 -2 +2 +2</td><td>A − B</td><td>AND / NAND</td></tr><tr><td>3</td><td>[[0, 1], [0, 1]]</td><td>0</td><td>1</td><td>1, 0</td><td>1</td><td>0011</td><td><span class="pos">A</span><span class="neg">B</span> ∨ <span class="pos">A</span><span class="pos">B</span></td><td>a</td><td>+0 +0 +4 +0</td><td>A</td><td>projection</td></tr><tr><td>4</td><td>[[1, 0], [0, 0]]</td><td>0</td><td>1</td><td>1, 0</td><td>1</td><td>0100</td><td><span class="neg">A</span><span class="pos">B</span></td><td>b ⊕ ab</td><td>+2 +2 -2 +2</td><td>B − A</td><td>AND / NAND</td></tr><tr><td>5</td><td>[[1, 1], [0, 0]]</td><td>0</td><td>1</td><td>1, 0</td><td>1</td><td>0101</td><td><span class="neg">A</span><span class="pos">B</span> ∨ <span class="pos">A</span><span class="pos">B</span></td><td>b</td><td>+0 +4 +0 +0</td><td>B</td><td>projection</td></tr><tr><td>6</td><td>[[1, 0], [0, 1]]</td><td>1</td><td>2</td><td>1, 1</td><td>2</td><td>0110</td><td><span class="neg">A</span><span class="pos">B</span> ∨ <span class="pos">A</span><span class="neg">B</span></td><td>a ⊕ b</td><td>+0 +0 +0 +4</td><td>A △ B</td><td>XOR / XNOR</td></tr><tr><td>7</td><td>[[1, 1], [0, 1]]</td><td>1</td><td>2</td><td>1, 1</td><td>2</td><td>0111</td><td><span class="neg">A</span><span class="pos">B</span> ∨ <span class="pos">A</span><span class="neg">B</span> ∨ <span class="pos">A</span><span class="pos">B</span></td><td>a ⊕ b ⊕ ab</td><td>-2 +2 +2 +2</td><td>A ∪ B</td><td>AND / NAND</td></tr><tr><td>8</td><td>[[0, 0], [1, 0]]</td><td>0</td><td>0</td><td>0, 0</td><td>1</td><td>1000</td><td><span class="neg">A</span><span class="neg">B</span></td><td>1 ⊕ a ⊕ b ⊕ ab</td><td>+2 -2 -2 -2</td><td><span class="neg">A</span> ∩ <span class="neg">B</span></td><td>AND / NAND</td></tr><tr><td>9</td><td>[[0, 1], [1, 0]]</td><td>-1</td><td>0</td><td>1, -1</td><td>2</td><td>1001</td><td><span class="neg">A</span><span class="neg">B</span> ∨ <span class="pos">A</span><span class="pos">B</span></td><td>1 ⊕ a ⊕ b</td><td>+0 +0 +0 -4</td><td>(<span class="pos">A</span> ∩ <span class="pos">B</span>) ∪ (<span class="neg">A</span> ∩ <span class="neg">B</span>)</td><td>XOR / XNOR</td></tr><tr><td>10</td><td>[[0, 0], [1, 1]]</td><td>0</td><td>1</td><td>1, 0</td><td>1</td><td>1010</td><td><span class="neg">A</span><span class="neg">B</span> ∨ <span class="pos">A</span><span class="neg">B</span></td><td>1 ⊕ b</td><td>+0 -4 +0 +0</td><td><span class="neg">B</span></td><td>projection</td></tr><tr><td>11</td><td>[[0, 1], [1, 1]]</td><td>-1</td><td>1</td><td>(1+√5)/2, (1−√5)/2</td><td>2</td><td>1011</td><td><span class="neg">A</span><span class="neg">B</span> ∨ <span class="pos">A</span><span class="neg">B</span> ∨ <span class="pos">A</span><span class="pos">B</span></td><td>1 ⊕ b ⊕ ab</td><td>-2 -2 +2 -2</td><td><span class="pos">A</span> ∪ <span class="neg">B</span></td><td>AND / NAND</td></tr><tr><td>12</td><td>[[1, 0], [1, 0]]</td><td>0</td><td>1</td><td>1, 0</td><td>1</td><td>1100</td><td><span class="neg">A</span><span class="neg">B</span> ∨ <span class="neg">A</span><span class="pos">B</span></td><td>1 ⊕ a</td><td>+0 +0 -4 +0</td><td><span class="neg">A</span></td><td>projection</td></tr><tr><td>13</td><td>[[1, 1], [1, 0]]</td><td>-1</td><td>1</td><td>(1+√5)/2, (1−√5)/2</td><td>2</td><td>1101</td><td><span class="neg">A</span><span class="neg">B</span> ∨ <span class="neg">A</span><span class="pos">B</span> ∨ <span class="pos">A</span><span class="pos">B</span></td><td>1 ⊕ a ⊕ ab</td><td>-2 +2 -2 -2</td><td><span class="neg">A</span> ∪ <span class="pos">B</span></td><td>AND / NAND</td></tr><tr><td>14</td><td>[[1, 0], [1, 1]]</td><td>1</td><td>2</td><td>1, 1</td><td>2</td><td>1110</td><td><span class="neg">A</span><span class="neg">B</span> ∨ <span class="neg">A</span><span class="pos">B</span> ∨ <span class="pos">A</span><span class="neg">B</span></td><td>1 ⊕ ab</td><td>-2 -2 -2 +2</td><td><span class="neg">A</span> ∪ <span class="neg">B</span></td><td>AND / NAND</td></tr><tr><td>15</td><td>[[1, 1], [1, 1]]</td><td>0</td><td>2</td><td>2, 0</td><td>1</td><td>1111</td><td><span class="neg">A</span><span class="neg">B</span> ∨ <span class="neg">A</span><span class="pos">B</span> ∨ <span class="pos">A</span><span class="neg">B</span> ∨ <span class="pos">A</span><span class="pos">B</span></td><td>1</td><td>-4 +0 +0 +0</td><td>U</td><td>constant</td></tr></tbody></table></div></div></div>
+<div id="s-matrix" class="hidden"><div class="card">
+<h2>the 2&times;2 matrix of each function &mdash; [[bit3, bit1], [bit4, bit2]]</h2>
+<div class="body"><table class="grid "><thead><tr><th>#</th><th>matrix</th><th>weight</th><th>det</th><th>trace</th><th>char poly</th><th>eigenvalues</th><th>rank</th><th>rank GF(2)</th><th>det GF(2)</th><th>class</th><th>MᵀM</th><th>σ</th><th>inverse</th><th>‖M‖</th></tr></thead><tbody><tr><td>0</td><td>[[0, 0], [0, 0]]</td><td>0</td><td>0</td><td>0</td><td>λ²</td><td>0, 0</td><td>0</td><td>0</td><td>0</td><td>idempotent</td><td>[[0, 0], [0, 0]]</td><td>0, 0</td><td>—</td><td>0</td></tr><tr><td>1</td><td>[[0, 1], [0, 0]]</td><td>1</td><td>0</td><td>0</td><td>λ²</td><td>0, 0</td><td>1</td><td>1</td><td>0</td><td>nilpotent</td><td>[[0, 0], [0, 1]]</td><td>1, 0</td><td>—</td><td>1</td></tr><tr><td>2</td><td>[[0, 0], [0, 1]]</td><td>1</td><td>0</td><td>1</td><td>λ² −1λ</td><td>1, 0</td><td>1</td><td>1</td><td>0</td><td>idempotent</td><td>[[0, 0], [0, 1]]</td><td>1, 0</td><td>—</td><td>1</td></tr><tr><td>3</td><td>[[0, 1], [0, 1]]</td><td>2</td><td>0</td><td>1</td><td>λ² −1λ</td><td>1, 0</td><td>1</td><td>1</td><td>0</td><td>idempotent</td><td>[[0, 0], [0, 2]]</td><td>√2, 0</td><td>—</td><td>√2</td></tr><tr><td>4</td><td>[[1, 0], [0, 0]]</td><td>1</td><td>0</td><td>1</td><td>λ² −1λ</td><td>1, 0</td><td>1</td><td>1</td><td>0</td><td>idempotent</td><td>[[1, 0], [0, 0]]</td><td>1, 0</td><td>—</td><td>1</td></tr><tr><td>5</td><td>[[1, 1], [0, 0]]</td><td>2</td><td>0</td><td>1</td><td>λ² −1λ</td><td>1, 0</td><td>1</td><td>1</td><td>0</td><td>idempotent</td><td>[[1, 1], [1, 1]]</td><td>√2, 0</td><td>—</td><td>√2</td></tr><tr><td>6</td><td>[[1, 0], [0, 1]]</td><td>2</td><td>1</td><td>2</td><td>λ² −2λ +1</td><td>1, 1</td><td>2</td><td>2</td><td>1</td><td>involution</td><td>[[1, 0], [0, 1]]</td><td>1, 1</td><td>[[1, 0], [0, 1]]/1</td><td>√2</td></tr><tr><td>7</td><td>[[1, 1], [0, 1]]</td><td>3</td><td>1</td><td>2</td><td>λ² −2λ +1</td><td>1, 1</td><td>2</td><td>2</td><td>1</td><td>—</td><td>[[1, 1], [1, 2]]</td><td>√((3+√5)/2), √((3−√5)/2)</td><td>[[1, -1], [0, 1]]/1</td><td>√3</td></tr><tr><td>8</td><td>[[0, 0], [1, 0]]</td><td>1</td><td>0</td><td>0</td><td>λ²</td><td>0, 0</td><td>1</td><td>1</td><td>0</td><td>nilpotent</td><td>[[1, 0], [0, 0]]</td><td>1, 0</td><td>—</td><td>1</td></tr><tr><td>9</td><td>[[0, 1], [1, 0]]</td><td>2</td><td>-1</td><td>0</td><td>λ² −1</td><td>1, -1</td><td>2</td><td>2</td><td>1</td><td>involution</td><td>[[1, 0], [0, 1]]</td><td>1, 1</td><td>[[0, -1], [-1, 0]]/-1</td><td>√2</td></tr><tr><td>10</td><td>[[0, 0], [1, 1]]</td><td>2</td><td>0</td><td>1</td><td>λ² −1λ</td><td>1, 0</td><td>1</td><td>1</td><td>0</td><td>idempotent</td><td>[[1, 1], [1, 1]]</td><td>√2, 0</td><td>—</td><td>√2</td></tr><tr><td>11</td><td>[[0, 1], [1, 1]]</td><td>3</td><td>-1</td><td>1</td><td>λ² −1λ −1</td><td>(1+√5)/2, (1−√5)/2</td><td>2</td><td>2</td><td>1</td><td>—</td><td>[[1, 1], [1, 2]]</td><td>√((3+√5)/2), √((3−√5)/2)</td><td>[[1, -1], [-1, 0]]/-1</td><td>√3</td></tr><tr><td>12</td><td>[[1, 0], [1, 0]]</td><td>2</td><td>0</td><td>1</td><td>λ² −1λ</td><td>1, 0</td><td>1</td><td>1</td><td>0</td><td>idempotent</td><td>[[2, 0], [0, 0]]</td><td>√2, 0</td><td>—</td><td>√2</td></tr><tr><td>13</td><td>[[1, 1], [1, 0]]</td><td>3</td><td>-1</td><td>1</td><td>λ² −1λ −1</td><td>(1+√5)/2, (1−√5)/2</td><td>2</td><td>2</td><td>1</td><td>—</td><td>[[2, 1], [1, 1]]</td><td>√((3+√5)/2), √((3−√5)/2)</td><td>[[0, -1], [-1, 1]]/-1</td><td>√3</td></tr><tr><td>14</td><td>[[1, 0], [1, 1]]</td><td>3</td><td>1</td><td>2</td><td>λ² −2λ +1</td><td>1, 1</td><td>2</td><td>2</td><td>1</td><td>—</td><td>[[2, 1], [1, 1]]</td><td>√((3+√5)/2), √((3−√5)/2)</td><td>[[1, 0], [-1, 1]]/1</td><td>√3</td></tr><tr><td>15</td><td>[[1, 1], [1, 1]]</td><td>4</td><td>0</td><td>2</td><td>λ² −2λ</td><td>2, 0</td><td>1</td><td>1</td><td>0</td><td>—</td><td>[[2, 2], [2, 2]]</td><td>2, 0</td><td>—</td><td>2</td></tr></tbody></table></div></div></div>
+<div id="s-uni" class="hidden"><div class="card">
+<h2>the 17 minimal covers &mdash; connectives (rows) vs covers (columns)</h2>
+<div class="body"><div class="covwrap"><table class="grid covers"><thead><tr><th>cover →</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead><tbody><tr><td>NOT</td><td></td><td></td><td></td><td>✓</td><td></td><td></td><td>✓</td><td></td><td>✓</td></tr><tr><td>AND</td><td></td><td></td><td></td><td></td><td></td><td></td><td>✓</td><td></td><td></td></tr><tr><td>OR</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>XOR</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>XNOR</td><td></td><td></td><td></td><td></td><td></td><td>✓</td><td></td><td></td><td></td></tr><tr><td>NAND</td><td>✓</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>NOR</td><td></td><td>✓</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td><span class="pos">B</span> ∨ <span class="neg">A</span></td><td></td><td></td><td>✓</td><td></td><td></td><td></td><td></td><td>✓</td><td>✓</td></tr><tr><td><span class="pos">A</span> ∧ <span class="neg">B</span></td><td></td><td></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td></td><td></td><td></td></tr><tr><td>TRUE</td><td></td><td></td><td></td><td></td><td>✓</td><td></td><td></td><td></td><td></td></tr><tr><td>FALSE</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>✓</td><td></td></tr></tbody></table><table class="grid covers"><thead><tr><th>cover →</th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th></tr></thead><tbody><tr><td>NOT</td><td></td><td>✓</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>AND</td><td></td><td></td><td>✓</td><td>✓</td><td>✓</td><td></td><td></td><td></td></tr><tr><td>OR</td><td></td><td>✓</td><td></td><td></td><td></td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>XOR</td><td>✓</td><td></td><td></td><td>✓</td><td>✓</td><td></td><td>✓</td><td>✓</td></tr><tr><td>XNOR</td><td></td><td></td><td>✓</td><td></td><td>✓</td><td>✓</td><td></td><td>✓</td></tr><tr><td>NAND</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>NOR</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td><span class="pos">B</span> ∨ <span class="neg">A</span></td><td>✓</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td><span class="pos">A</span> ∧ <span class="neg">B</span></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>TRUE</td><td></td><td></td><td></td><td>✓</td><td></td><td></td><td>✓</td><td></td></tr><tr><td>FALSE</td><td></td><td></td><td>✓</td><td></td><td></td><td>✓</td><td></td><td></td></tr></tbody></table></div><div class="legend">1 NAND   2 NOR   3 <span class="pos">A</span> ∧ <span class="neg">B</span> + <span class="pos">B</span> ∨ <span class="neg">A</span>   4 <span class="pos">A</span> ∧ <span class="neg">B</span> + NOT   5 <span class="pos">A</span> ∧ <span class="neg">B</span> + TRUE   6 <span class="pos">A</span> ∧ <span class="neg">B</span> + XNOR   7 AND + NOT   8 <span class="pos">B</span> ∨ <span class="neg">A</span> + F<span class="pos">A</span>LSE   9 <span class="pos">B</span> ∨ <span class="neg">A</span> + NOT   10 <span class="pos">B</span> ∨ <span class="neg">A</span> + XOR   11 NOT + OR   12 AND + FALSE + XNOR   13 AND + TRUE + XOR   14 AND + XNOR + XOR   15 FALSE + OR + XNOR   16 OR + TRUE + XOR   17 OR + XNOR + XOR</div></div></div></div>
+</div>
+
+<div class="page wrap hidden" id="p-props">
+<div class="card"><h2>Properties&nbsp;&nbsp;T₀ T₁ M D L</h2>
+<div class="body"><table class="grid "><thead><tr><th>#</th><th>T₀</th><th>T₁</th><th>M</th><th>D</th><th>L</th></tr></thead><tbody><tr><td>0</td><td>✓</td><td></td><td>✓</td><td></td><td>✓</td></tr><tr><td>1</td><td>✓</td><td>✓</td><td>✓</td><td></td><td></td></tr><tr><td>2</td><td>✓</td><td></td><td></td><td></td><td></td></tr><tr><td>3</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>4</td><td>✓</td><td></td><td></td><td></td><td></td></tr><tr><td>5</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>6</td><td>✓</td><td></td><td></td><td></td><td>✓</td></tr><tr><td>7</td><td>✓</td><td>✓</td><td>✓</td><td></td><td></td></tr><tr><td>8</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>9</td><td></td><td>✓</td><td></td><td></td><td>✓</td></tr><tr><td>10</td><td></td><td></td><td></td><td>✓</td><td>✓</td></tr><tr><td>11</td><td></td><td>✓</td><td></td><td></td><td></td></tr><tr><td>12</td><td></td><td></td><td></td><td>✓</td><td>✓</td></tr><tr><td>13</td><td></td><td>✓</td><td></td><td></td><td></td></tr><tr><td>14</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>15</td><td></td><td>✓</td><td>✓</td><td></td><td>✓</td></tr></tbody></table></div></div>
+<div class="card"><h2>The 17 minimal bases (two-input connectives)</h2>
+<div class="body"><table class="grid "><thead><tr><th>n</th><th>basis</th></tr></thead><tbody><tr><td>1</td><td>NAND</td></tr><tr><td>1</td><td>NOR</td></tr><tr><td>2</td><td><span class="pos">A</span> ∧ <span class="neg">B</span> + <span class="pos">B</span> ∨ <span class="neg">A</span></td></tr><tr><td>2</td><td><span class="pos">A</span> ∧ <span class="neg">B</span> + NOT</td></tr><tr><td>2</td><td><span class="pos">A</span> ∧ <span class="neg">B</span> + TRUE</td></tr><tr><td>2</td><td><span class="pos">A</span> ∧ <span class="neg">B</span> + XNOR</td></tr><tr><td>2</td><td>AND + NOT</td></tr><tr><td>2</td><td><span class="pos">B</span> ∨ <span class="neg">A</span> + F<span class="pos">A</span>LSE</td></tr><tr><td>2</td><td><span class="pos">B</span> ∨ <span class="neg">A</span> + NOT</td></tr><tr><td>2</td><td><span class="pos">B</span> ∨ <span class="neg">A</span> + XOR</td></tr><tr><td>2</td><td>NOT + OR</td></tr><tr><td>3</td><td>AND + FALSE + XNOR</td></tr><tr><td>3</td><td>AND + TRUE + XOR</td></tr><tr><td>3</td><td>AND + XNOR + XOR</td></tr><tr><td>3</td><td>FALSE + OR + XNOR</td></tr><tr><td>3</td><td>OR + TRUE + XOR</td></tr><tr><td>3</td><td>OR + XNOR + XOR</td></tr></tbody></table></div></div>
+<div class="card"><h2>Connectives</h2><div class="body">
+<div class="conbox"><label><input type="checkbox" > NOT</label><label><input type="checkbox" > AND</label><label><input type="checkbox" > OR</label><label><input type="checkbox" > XOR</label><label><input type="checkbox" > XNOR</label><label><input type="checkbox" checked> NAND</label><label><input type="checkbox" > NOR</label><label><input type="checkbox" > <span class="pos">B</span> ∨ <span class="neg">A</span></label><label><input type="checkbox" > <span class="pos">A</span> ∧ <span class="neg">B</span></label><label><input type="checkbox" > TRUE</label><label><input type="checkbox" > FALSE</label></div>
+<div class="verdict" id="verdict"></div></div></div>
+</div>
+
+<script>
+document.querySelectorAll('#tabs .tab').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('#tabs .tab').forEach(function(x){x.classList.remove('active')});
+    b.classList.add('active');
+    ['rep','tables','props'].forEach(function(t){
+      document.getElementById('p-'+t).classList.toggle('hidden', t!==b.dataset.t);
+    });
+  };
+});
+document.querySelectorAll('#subtabs .subtab').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('#subtabs .subtab').forEach(function(x){x.classList.remove('active')});
+    b.classList.add('active');
+    ['reps','matrix','uni'].forEach(function(s){
+      document.getElementById('s-'+s).classList.toggle('hidden', s!==b.dataset.s);
+    });
+  };
+});
+// column header: none -> asc -> desc -> group -> none
+document.querySelectorAll('table.grid').forEach(function(t){
+  var state={};
+  t.querySelectorAll('th').forEach(function(th,ci){
+    th.onclick=function(){
+      var st=(state[ci]||0)+1; if(st>3)st=0; state={}; state[ci]=st;
+      var tb=t.tBodies[0], rows=Array.prototype.slice.call(tb.rows);
+      rows.forEach(function(r){r.classList.remove('band')});
+      if(st===0){ rows.sort(function(a,b){return +a.cells[0].textContent - +b.cells[0].textContent}); }
+      else {
+        rows.sort(function(a,b){
+          var x=a.cells[ci].textContent, y=b.cells[ci].textContent;
+          var nx=parseFloat(x), ny=parseFloat(y);
+          var c=(!isNaN(nx)&&!isNaN(ny))? nx-ny : (x<y?-1:x>y?1:0);
+          return st===2? -c : c;
+        });
+        if(st===3){ var band=0, last=null;
+          rows.forEach(function(r){ var v=r.cells[ci].textContent;
+            if(v!==last){band^=1;last=v;} if(band)r.classList.add('band'); }); }
+      }
+      rows.forEach(function(r){tb.appendChild(r)});
+      t.querySelectorAll('th').forEach(function(h,i){h.style.textDecoration=(i===ci&&st)?'underline':'none';});
+    };
+  });
+});
+// variable bar -> highlight rows whose minterm set matches
+var MINTS={"0":"2,3","1":"0,1","2":"1,3","3":"0,2"};
+function hl(lit){
+  document.querySelectorAll('.vb').forEach(function(x){x.classList.remove('on')});
+  document.querySelectorAll('table.grid tr').forEach(function(r){r.classList.remove('hot')});
+  if(lit==null)return;
+  document.querySelectorAll('.vb')[lit].classList.add('on');
+  var want=MINTS[lit];
+  document.querySelectorAll('#s-reps tbody tr,#s-matrix tbody tr').forEach(function(r){
+    var i={"0":0,"1":8,"2":4,"3":12,"4":2,"5":10,"6":6,"7":14,"8":1,"9":9,"10":5,"11":13,"12":3,"13":11,"14":7,"15":15}[+r.cells[0].textContent];
+    if({"0":"","1":"0","2":"1","3":"0,1","4":"2","5":"0,2","6":"1,2","7":"0,1,2","8":"3","9":"0,3","10":"1,3","11":"0,1,3","12":"2,3","13":"0,2,3","14":"1,2,3","15":"0,1,2,3"}[i]===want) r.classList.add('hot');
+  });
+}
+document.querySelectorAll('.vb').forEach(function(b){
+  b.onclick=function(){ hl(b.classList.contains('on')?null:+b.dataset.lit); };
+});
+</script>
+</body></html>
