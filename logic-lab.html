@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Experiments with Logic Gates — an interactive lab</title>
+<meta name="description" content="From a single NAND gate to the many logics truth can travel on: an interactive logic lab by Divyansh.">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔌</text></svg>">
+</head>
+<body>
+
+<nav class="top"><div class="wrap">
+  <span class="brand"><span class="dot"></span>Logic Lab</span>
+  <a class="lnk" href="#gates">Gates</a>
+  <a class="lnk" href="#universal">Universality</a>
+  <a class="lnk" href="#logics">Many logics</a>
+  <a class="lnk" href="#sql">SQL</a>
+  <a class="lnk" href="#fuzzy">Fuzzy</a>
+  <a class="lnk" href="#modal">Modal</a>
+  <a class="lnk" href="#quantum">Quantum</a>
+  <a class="lnk" href="#boolean">Boolean</a>
+  <a class="lnk" href="#dfa">DFA</a>
+  <a class="lnk" href="#trail">The trail</a>
+  <a class="lnk" href="studio.html"><b>Studio</b></a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="kicker">Interactive lab · 8 experiments</span>
+  <h1>My Experiments with <span class="grad">Logic Gates</span></h1>
+  <p class="lead">It began with a tree drawn by hand — classical logic at the top (propositional AND / OR / NOT, then FOL with quantifiers), non-classical logic below it (multivalued base-3, fuzzy between 0 and 1), and beneath those, modal logic (“what could be”) and quantum logic. One question ran through all of it: <em>if truth is not a clean yes / no, which rulebook still holds?</em></p>
+  <p class="lead">This lab is that question in tool form. Toggle a gate. Type a sentence and watch it run under five logics side by side. Break distributivity with a quantum projection. Everything here is checked against real computation, not asserted.</p>
+  <div class="byline">
+    <span class="pill">Divyansh · TheQMLGuy</span>
+    <span class="pill">One sentence, every logic</span>
+    <span class="pill">Vanilla JS · no build chain</span>
+  </div>
+</div></header>
+
+<!-- 1. GATE LAB -->
+<section id="gates"><div class="wrap">
+  <h2><span class="num">01</span> The gate lab</h2>
+  <p class="sec-sub">The switch logic. Every binary gate is one of just 16 possible truth tables on two inputs; a handful of them are the ones we name. Pick a gate, flip A and B, and watch the output row light up. Or write your own sentence in the box.</p>
+
+  <div class="lab">
+    <div class="chips" id="gateChips"></div>
+    <div class="grid g2 mt">
+      <div>
+        <div class="row" style="gap:26px">
+          <div class="switch"><span>A</span><span class="sw" id="swA"><span class="knob"></span></span><b id="valA">0</b></div>
+          <div class="switch"><span>B</span><span class="sw" id="swB"><span class="knob"></span></span><b id="valB">0</b></div>
+        </div>
+        <div class="mt" style="font-family:var(--mono);font-size:1.05rem">
+          sentence: <span id="exprEcho" style="color:var(--teal)">A &amp; B</span>
+          &nbsp;→&nbsp; <span id="gateOut" class="badge f">0</span>
+        </div>
+        <label class="field mt" style="max-width:420px">
+          <span>Write your own (variables A, B, C · operators &amp; | ^ ! ~ plus AND OR NOT NAND NOR XOR XNOR, or ∧ ∨ ¬ ⊕)</span>
+          <input type="text" id="exprInput" value="A & B" spellcheck="false">
+        </label>
+        <div class="row mt">
+          <button id="exprGo" class="primary">Evaluate</button>
+          <span class="tiny">e.g. <code>A &amp; !B</code> · <code>(A | B) ^ C</code> · <code>NAND(A,B)</code></span>
+        </div>
+        <p id="exprErr" class="tiny" style="color:var(--false);min-height:1.2em"></p>
+      </div>
+      <div>
+        <div id="gateSvg"></div>
+      </div>
+    </div>
+    <h3>Truth table</h3>
+    <div class="tblwrap"><table class="tt" id="ttClassic"></table></div>
+  </div>
+</div></section>
+
+<!-- 2. UNIVERSALITY -->
+<section id="universal"><div class="wrap">
+  <h2><span class="num">02</span> Why NAND &amp; NOR are universal</h2>
+  <p class="sec-sub">Handwritten in the notes, studying binary: <em>“Why NAND &amp; NOR are universally complete?”</em> and later, <em>“What makes NAND NOR universal &amp; not the others.”</em> The answer is constructive — build NOT, AND and OR out of NAND alone, and you have built everything.</p>
+
+  <div class="quote">¬x = x ↑ x = ¬(¬x &amp; ¬x) &nbsp;·&nbsp; x ∧ y = (x ↑ y) ↑ (x ↑ y) &nbsp;·&nbsp; x ∨ y = (x ↑ x) ↑ (y ↑ y) = z ↑ w
+    <span class="who">— from the NAND-NOR-Superiority note; ↑ is NAND, ↓ is NOR</span></div>
+
+  <div class="lab">
+    <div class="row">
+      <button class="chip on" data-base="nand">Build from NAND ↑</button>
+      <button class="chip" data-base="nor">Build from NOR ↓</button>
+    </div>
+    <div class="grid g2 mt" id="univCards"></div>
+    <div class="mt row" style="align-items:center;gap:14px">
+      <button id="synthBtn" class="primary">Synthesise all 16 binary connectives</button>
+      <span class="badge" id="synthOut">from one gate…</span>
+    </div>
+    <p class="tiny">Exhaustive construction: start from the projections x, y and repeatedly apply the single gate; count how many of the 16 two-input truth tables appear. NAND reaches 16 / 16, NOR reaches 16 / 16. No other two-input gate is universal on its own — that is what “not the others” means.</p>
+  </div>
+</div></section>
+
+<!-- 3. MANY LOGICS -->
+<section id="logics"><div class="wrap">
+  <h2><span class="num">03</span> One sentence, five logics</h2>
+  <p class="sec-sub">The comparison is the product. Type a sentence; it is evaluated under classical logic, Kleene K₃ (the logic of the unknown — the one SQL runs on), Łukasiewicz Ł₃ (the logic of the not-yet — the sea battle), and fuzzy logic (truth as a percentage), plus SQL’s NULL handling.</p>
+
+  <div class="lab">
+    <div class="row">
+      <button class="chip" data-sent="A & !A">A AND NOT A</button>
+      <button class="chip" data-sent="A | !A">A OR NOT A</button>
+      <button class="chip" data-sent="!A | B">A → B</button>
+      <button class="chip" data-sent="!(A & B)">NOT(A AND B)</button>
+    </div>
+    <label class="field mt" style="max-width:520px">
+      <span>Sentence (variables A, B; operators &amp; | ^ ! and AND OR NOT → )</span>
+      <input type="text" id="mlExpr" value="A &amp; !A" spellcheck="false">
+    </label>
+    <div class="grid g2 mt" id="mlTables"></div>
+    <p class="tiny">Note the one row that separates the two three-valued logics: in Kleene, A → A is <span class="vu">U</span> at the middle value (not a tautology); in Łukasiewicz it is <span class="v1">1</span>. Same table everywhere else.</p>
+  </div>
+
+  <h3>Which classical laws survive?</h3>
+  <p class="sec-sub">Run each law through every logic and ask: is it a tautology here? This matrix is computed live, not quoted.</p>
+  <div class="tblwrap"><table class="tt matrix" id="lawMatrix"></table></div>
+  <div class="legend">
+    <span><span class="swatch" style="background:var(--true)"></span>holds for all valuations</span>
+    <span><span class="swatch" style="background:var(--false)"></span>fails somewhere</span>
+  </div>
+</div></section>
+
+<!-- 4. SQL -->
+<section id="sql"><div class="wrap">
+  <h2><span class="num">04</span> SQL: the most-used non-classical logic</h2>
+  <p class="sec-sub">Every database blank is a third truth value. This is Kleene’s logic wearing a WHERE clause — and it bites. Evaluate the classic expressions below, then run the “NOT IN trap” that turns an 8-row result into 0.</p>
+
+  <div class="lab">
+    <div class="grid g2">
+      <div>
+        <h3>NULL in three-valued logic</h3>
+        <div class="tblwrap"><table class="tt" id="sqlTable"></table></div>
+        <p class="tiny">Measured behaviour: FALSE dominates AND, TRUE dominates OR, and NOT of the unknown is the unknown.</p>
+      </div>
+      <div>
+        <h3>The NOT IN trap</h3>
+        <p class="tiny">A 10-row table, ids 1…10. Query <code>id NOT IN (1, 2, NULL)</code>.</p>
+        <div class="row">
+          <button class="chip on" data-notin="null">…with NULL in the list</button>
+          <button class="chip" data-notin="plain">…without NULL</button>
+        </div>
+        <div class="mt" style="font-family:var(--mono);font-size:1.15rem">
+          rows returned: <b id="notinOut">0</b> of 10
+        </div>
+        <p class="tiny" id="notinMsg"></p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 5. FUZZY -->
+<section id="fuzzy"><div class="wrap">
+  <h2><span class="num">05</span> Fuzzy logic: truth as a percentage</h2>
+  <p class="sec-sub">Not uncertainty — gradation. “The room is warm” is 0.6 true, and AND is the minimum, OR the maximum, NOT the complement. Push the memberships and watch the laws bend, then run the little two-rule fan controller.</p>
+
+  <div class="lab">
+    <div class="grid g2">
+      <div>
+        <h3>Membership playground</h3>
+        <label class="field"><span>A = <b id="faVal">0.60</b></span><input type="range" id="fa" min="0" max="1" step="0.01" value="0.6"></label>
+        <label class="field"><span>B = <b id="fbVal">0.30</b></span><input type="range" id="fb" min="0" max="1" step="0.01" value="0.3"></label>
+        <div class="tblwrap"><table class="tt" id="fuzzyTable"></table></div>
+        <p class="tiny">A OR NOT A at 0.6 is <b>0.6</b>, not 1 — fuzzy truth is graded, not a probability. De Morgan still holds.</p>
+      </div>
+      <div>
+        <h3>Mamdani fan controller</h3>
+        <p class="tiny">Two rules: <em>if temp is hot, fan is fast</em> · <em>if temp is mild, fan is slow</em>. Centroid defuzzification.</p>
+        <label class="field"><span>Temperature = <b id="tempVal">70</b> °C</span><input type="range" id="temp" min="0" max="100" step="1" value="70"></label>
+        <div class="kv mt">
+          <span>hot firing <b id="hotFire">0.33</b></span>
+          <span>mild firing <b id="mildFire">0.33</b></span>
+          <span>fan speed <b id="fanOut">—</b> / 100</span>
+        </div>
+        <svg id="fanSvg" viewBox="0 0 420 200" width="420"></svg>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 6. MODAL -->
+<section id="modal"><div class="wrap">
+  <h2><span class="num">06</span> Modal logic: truth depends on where you stand</h2>
+  <p class="sec-sub">Possible worlds, Kripke 1959/1963. □p means “p is true in every world I can see”; ◇p means “in some world I can see”. Click a world’s p, and toggle which worlds it can see. Watch what happens at a dead end.</p>
+
+  <div class="lab">
+    <div class="grid g2">
+      <div>
+        <div class="row">
+          <button class="chip" id="modalPreset">Load the dead-end example</button>
+        </div>
+        <div id="worldsBox" class="mt"></div>
+        <p class="tiny">World 0 sees a p-world and a not-p-world: □p false, ◇p true. World 1 sees nothing: □p <em>vacuously</em> true, ◇p false. The same sentence flips because the frame changed.</p>
+      </div>
+      <div>
+        <div class="tblwrap"><table class="tt" id="modalTable"></table></div>
+        <p class="tiny">◇p ≡ ¬□¬p holds on every frame; that is an identity of the logic, not a coincidence of this picture.</p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 7. QUANTUM -->
+<section id="quantum"><div class="wrap">
+  <h2><span class="num">07</span> Quantum logic: when AND stops distributing over OR</h2>
+  <p class="sec-sub">Birkhoff–von Neumann 1936. A yes/no question about a quantum system is a projection; the lattice of projections is orthomodular but <em>not distributive</em>. Three lines in the plane — drag their angles and watch the distributive law break, measured with real 2×2 projection matrices.</p>
+
+  <div class="lab">
+    <div class="grid g2">
+      <div>
+        <label class="field"><span>line p angle = <b id="angP">0°</b></span><input type="range" id="pAng" min="0" max="180" step="1" value="0"></label>
+        <label class="field"><span>line q angle = <b id="angQ">45°</b></span><input type="range" id="qAng" min="0" max="180" step="1" value="45"></label>
+        <label class="field"><span>line r angle = <b id="angR">90°</b></span><input type="range" id="rAng" min="0" max="180" step="1" value="90"></label>
+        <div class="kv mt">
+          <span>‖ p ∧ (q ∨ r) − p ‖ = <b id="qLhs">—</b></span>
+          <span>‖ (p ∧ q) ∨ (p ∧ r) ‖ = <b id="qRhs">—</b></span>
+        </div>
+        <div class="mt"><span class="badge" id="qVerdict">—</span></div>
+      </div>
+      <div><svg id="qSvg" viewBox="0 0 340 340" width="340"></svg></div>
+    </div>
+    <p class="tiny">With p, q, r at 0°, 45°, 90°: the left side is the line p (distance 0), the right side is the zero subspace (norm 0) — they disagree, so distributivity fails. Spin-x and spin-z projections do not even commute (‖PₓP_z − P_zPₓ‖ = 0.707), which is the reason the order of asking matters.</p>
+  </div>
+</div></section>
+
+<!-- 8. BOOLEAN EXPLORER -->
+<section id="boolean"><div class="wrap">
+  <h2><span class="num">08</span> Every Boolean function, classified</h2>
+  <p class="sec-sub">A separate thread from the notes: enumerate <em>all</em> Boolean functions and sort them by their structural properties. There are 16 two-variable functions and 256 three-variable ones. Filter them live.</p>
+
+  <div class="lab">
+    <div class="row">
+      <label class="field"><span>variables</span>
+        <select id="bfN"><option value="2">2 (16 functions)</option><option value="3">3 (256 functions)</option></select>
+      </label>
+      <label class="field"><span>filter</span>
+        <select id="bfFilter">
+          <option value="all">all</option>
+          <option value="linear">linear</option>
+          <option value="affine">affine</option>
+          <option value="monotone">monotone</option>
+          <option value="selfdual">self-dual</option>
+          <option value="symmetric">symmetric</option>
+          <option value="dependsall">depends on all inputs</option>
+        </select>
+      </label>
+      <span class="badge" id="bfCount">—</span>
+    </div>
+    <div class="tblwrap mt"><table class="tt" id="bfTable"></table></div>
+    <div class="kv mt" id="bfStats"></div>
+  </div>
+</div></section>
+
+<!-- 9. DFA -->
+<section id="dfa"><div class="wrap">
+  <h2><span class="num">09</span> From a DFA to a circuit of gates</h2>
+  <p class="sec-sub">Another page from the notes: a two-state machine over {a, b} reduced to a single NOT gate and a flip-flop. Type a string and run it.</p>
+
+  <div class="lab">
+    <div class="grid g2">
+      <div>
+        <label class="field"><span>input string over {a, b}</span>
+          <input type="text" id="dfaIn" value="abba" spellcheck="false"></label>
+        <div class="row mt"><button class="primary" id="dfaRun">Run</button>
+          <span class="badge" id="dfaVerdict">—</span></div>
+        <div id="dfaTrace" class="mt mono" style="font-size:.9rem"></div>
+      </div>
+      <div>
+        <div class="quote">D = (¬S · ¬x) + (S · ¬x) = ¬x &nbsp;·&nbsp; Accept = S
+          <span class="who">— the notes: current state S, input x (0 = a, 1 = b), next state D</span></div>
+        <svg id="dfaSvg" viewBox="0 0 420 190" width="420"></svg>
+        <p class="tiny">The machine accepts exactly the strings whose last symbol is <b>a</b> — the state S is “the last symbol was a”, so D = ¬x flips it back to q₀ the moment a <b>b</b> arrives.</p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 10. TRAIL -->
+<section id="trail"><div class="wrap">
+  <h2><span class="num">10</span> The trail</h2>
+  <p class="sec-sub">The primary sources behind this lab — the original handwritten notes, and the verification script that every number here was checked against.</p>
+
+  <div class="gallery">
+    <figure class="note"><img src="assets/notes/types-of-logic.png" alt="Handwritten tree of the types of logic"><figcaption><b>Types of Logic</b> — the tree: classical (propositional, FOL), non-classical (multivalued base-3, fuzzy), modal, quantum.</figcaption></figure>
+    <figure class="note"><img src="assets/notes/nand-nor-0.png" alt="NAND derivations"><figcaption><b>NAND &amp; NOR superiority</b> — ¬x = x↑x, x∧y = (x↑y)↑(x↑y), x∨y = (x↑x)↑(y↑y).</figcaption></figure>
+    <figure class="note"><img src="assets/notes/nand-nor-1.png" alt="The question"><figcaption><b>The question</b> — “What makes NAND NOR universal &amp; not the others”.</figcaption></figure>
+    <figure class="note"><img src="assets/notes/dfa-0.png" alt="DFA to circuit"><figcaption><b>DFA and logic gates</b> — a two-state machine reduced to ¬x → flip-flop → S.</figcaption></figure>
+    <figure class="note"><img src="assets/notes/dfa-1.png" alt="Karnaugh maps"><figcaption><b>DFA and logic gates</b> — Karnaugh-map style coverage of A ∩ B̄ regions.</figcaption></figure>
+  </div>
+
+  <div class="grid g2 mt">
+    <div class="card">
+      <h3>Under the hood</h3>
+      <p class="note">Every quantitative claim on this page is computed live in your browser from the same definitions used in the companion script <code>experiments/types-of-logic-experiments.py</code> (34 / 34 checks passing). The two-variable and three-variable Boolean classifications regenerate the <code>data/</code> CSVs.</p>
+    </div>
+    <div class="card">
+      <h3>Still open</h3>
+      <p class="note">Two branches the field would add that the original tree did not list: intuitionistic / constructive logic, and paraconsistent logic (contradiction-tolerant). And the von Neumann-ordinals-vs-logic-gates question, still awaiting its own words.</p>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="kv">
+    <span><b>My Experiments with Logic Gates</b></span>
+    <span>built with vanilla HTML · CSS · JS</span>
+    <span>no build chain, no server</span>
+  </div>
+  <p class="note mt">An understanding artifact first. Source on GitHub — <a href="https://github.com/TheQMLGuy/My-Experiments-with-Logic-gates">TheQMLGuy/My-Experiments-with-Logic-gates</a>.</p>
+</div></footer>
+
+<script src="app.js"></script>
+</body>
+</html>
