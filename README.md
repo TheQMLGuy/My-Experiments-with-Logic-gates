@@ -12,7 +12,8 @@ A single self-contained page. No build chain, no dependencies, no server.
 
 ## Representation
 
-- a **variable bar** — `a ¬a b ¬b`, and `c ¬c` at three variables — with
+- a **variable bar** — `a`, `not a`, `b`, `not b`, and `c`, `not c` at
+  three variables — with
   multi-select; the highlight is the intersection of whatever is ticked;
 - three **linked diagrams** — **Venn**, **cube (hypercube)** and **tree
   (lattice)** — that cross-highlight in both directions. Click a literal, a Venn
@@ -33,8 +34,8 @@ Three sub-tables:
 
 - **representations** — the 16 functions with columns: expression, matrix, det,
   trace, eigenvalues, rank, code, SOP, ANF, Walsh, set, NPN. The *expression*
-  column writes each function from `a / ¬a / b / ¬b` with its formal name in
-  brackets — `a ∧ b (AND)`, `(a ∧ b̄) ∨ (ā ∧ b) (XOR)`;
+  column writes each function from `a`, `not a`, `b`, `not b` with its formal
+  name in brackets — `a ∧ b (AND)`, `(a ∧ not b) ∨ (not a ∧ b) (XOR)`;
 - **matrix** — the 2×2 matrix of each function, drawn as a bracketed 2×2, with
   weight, det, trace, characteristic polynomial, eigenvalues, rank, rank over
   GF(2), det over GF(2), class (idempotent / nilpotent / involution), MᵀM,
@@ -62,7 +63,8 @@ Values are **exact, never rounded**. The golden-ratio eigenvalues print as
 never decimals. The two functions with characteristic polynomial `λ² − λ − 1`
 are exactly the two whose largest singular value is φ.
 
-Negation is drawn as **white text on a black box**, not a bar. The layout is
+Negation is written as the word **`not`** — `not a`, `a ∧ not b`, `not(not a and
+not b)` — not a bar over the letter and not an inverted token. The layout is
 responsive down to phone width: the diagram panels stack and wide tables scroll
 horizontally.
 
