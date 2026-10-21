@@ -43,8 +43,11 @@ A single self-contained page, no dependencies. Two variable counts, base 2.
   weight, det, trace, characteristic polynomial, eigenvalues, rank, rank over
   GF(2), det over GF(2), class (idempotent / nilpotent / involution), MᵀM,
   singular values, inverse, and Frobenius norm;
-- **universal** — the **17 minimal complete bases as columns**, the connectives
-  as rows, membership shown as filled cells (no ticks), split into two blocks.
+- **universal** — the **16 functions written inside each of the 17 minimal
+  complete bases**. Rows are the 16 functions, columns the 17 bases; each cell is
+  the shortest expression for that function using only that base's connectives,
+  found by breadth-first search and written in words — e.g. in the `AND + NOT`
+  base, `OR` reads `not(not a and not b)`.
 
 ### Properties tab
 
