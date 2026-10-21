@@ -45,6 +45,15 @@ Three sub-tables:
   weight, det, trace, characteristic polynomial, eigenvalues, rank, rank over
   GF(2), det over GF(2), class (idempotent / nilpotent / involution), MᵀM,
   singular values, inverse, and Frobenius norm;
+- **physics** — an excursion. Treat the gate as a **unit square** and every `1`
+  as a **1 kg ball** sitting at its cell centre, then read off the mechanics:
+  total **mass**, **centre of mass**, **moment of inertia about the square's
+  centre**, moment of inertia **about the centre of mass** (parallel axis), and
+  the **radius of gyration**. Since all four cells lie at the same radius from
+  the centre, `I` about the centre is just `0.125·m` and never varies — the
+  quantity that actually differs between functions is the centre of mass, and so
+  the moment about it. `XOR` puts its two balls on the diagonal and keeps
+  `I_com = 0.25`; `a` puts them on an edge and drops to `0.125`.
 - **universal** — the **16 functions written inside each of the 17 minimal
   complete bases**. Rows are the 16 functions, columns the 17 bases; each cell is
   the shortest expression for that function using only that base's connectives,
