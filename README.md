@@ -34,8 +34,10 @@ Three sub-tables:
 
 - **representations** — the 16 functions with columns: expression, matrix, det,
   trace, eigenvalues, rank, code, SOP, ANF, Walsh, set, NPN. The *expression*
-  column writes each function from `a`, `not a`, `b`, `not b` with its formal
-  name in brackets — `a ∧ b (AND)`, `(a ∧ not b) ∨ (not a ∧ b) (XOR)`;
+  column writes each function from `a`, `not a`, `b`, `not b`, with the formal
+  name on a second line inside the cell — but only where the name is a distinct
+  connective name, so `a ∧ b` over `(AND)` and `not a ∧ not b` over `(NOR)`,
+  while the projections stay single-line (`a`, `not a`, `b`, `not b`);
 - **matrix** — the 2×2 matrix of each function, drawn as a bracketed 2×2, with
   weight, det, trace, characteristic polynomial, eigenvalues, rank, rank over
   GF(2), det over GF(2), class (idempotent / nilpotent / involution), MᵀM,
