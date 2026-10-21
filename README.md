@@ -50,10 +50,12 @@ Three sub-tables:
   total **mass**, **centre of mass**, **moment of inertia about the square's
   centre**, moment of inertia **about the centre of mass** (parallel axis), and
   the **radius of gyration**. Since all four cells lie at the same radius from
-  the centre, `I` about the centre is just `0.125·m` and never varies — the
-  quantity that actually differs between functions is the centre of mass, and so
-  the moment about it. `XOR` puts its two balls on the diagonal and keeps
-  `I_com = 0.25`; `a` puts them on an edge and drops to `0.125`.
+  the centre, `I` about the centre is just `m/8` and never varies — the quantity
+  that actually differs between functions is the centre of mass, and so the
+  moment about it. `XOR` puts its two balls on the diagonal, so its centre of
+  mass is the square's centre and `I_com = 1/4`, `k = √2/4`; `a` puts them on an
+  edge, `I_com = 1/8`, `k = 1/4`; `OR` puts three balls at `(1/12, 1/12)` with
+  `I_com = 1/3`. All values are exact fractions and surds, never decimals.
 - **universal** — the **16 functions written inside each of the 17 minimal
   complete bases**. Rows are the 16 functions, columns the 17 bases; each cell is
   the shortest expression for that function using only that base's connectives,
