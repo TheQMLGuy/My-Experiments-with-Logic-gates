@@ -32,8 +32,11 @@ selected.
 
 Three sub-tables:
 
-- **representations** — the 16 functions with columns: expression, matrix, det,
-  trace, eigenvalues, rank, code, SOP, ANF, Walsh, set, NPN. The *expression*
+- **representations** — the 16 functions with columns: symbol, expression,
+  matrix, det, trace, eigenvalues, rank, code, SOP, ANF, Walsh, set, NPN. Each
+  function has its own symbol — `∧ ∨ ⊕ ⊙ ↑ ↓ ⊤ ⊥` for the named ones, `↛ ↚ ← →`
+  for the four mixed ones — while the four literals keep their letters (`a`,
+  `not a`, `b`, `not b`). The *expression*
   column writes each function from `a`, `not a`, `b`, `not b`, with the formal
   name on a second line inside the cell — but only where the name is a distinct
   connective name, so `a ∧ b` over `(AND)` and `not a ∧ not b` over `(NOR)`,
