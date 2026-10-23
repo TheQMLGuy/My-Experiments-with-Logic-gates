@@ -19,6 +19,11 @@ A single self-contained page. No build chain, no dependencies, no server.
   (lattice)** — that cross-highlight in both directions. Click a literal, a Venn
   region, a cube vertex or a tree node and the same minterm lights up in all
   three, plus the matching row of the tables;
+- two more models, in a second row: a **ring** — the truth table wrapped in
+  Gray-code order, so consecutive cells differ by one input, which is the cube's
+  tour read as a sequence rather than watched — and the **symmetry group**, the
+  set of input swaps and negations that leave the function unchanged, reported as
+  an exact count and its elements (it is 2, 4 or 8 at two variables);
 - a **2 / 3 variables** toggle. At three variables the Venn is three circles
   giving eight regions, the cube is the eight-vertex cube with its six facet
   labels, and the tree is the B₃ lattice.
